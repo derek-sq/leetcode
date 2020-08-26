@@ -7,24 +7,24 @@ import java.util.List;
 
 public class HelloWorld {
     public static void main(String[] args) {
-//        LeetCode200 test = new LeetCode200();
-//        char[][] grid = {{'1', '1', '1', '1', '0'},
-//                {'1', '1', '0', '1', '0'},
-//                {'1', '1', '0', '0', '0'},
-//                {'0', '0', '0', '0', '0'}};
-//        int res = test.numIslandsBFS(grid);
-//        System.out.println(res);
-
-
-        POJ_3984 test = new POJ_3984();
-        char[][] grid = {{'1', '1', '0', '0', '1'},
-                        {'1', '1', '0', '1', '0'},
-                        {'1', '1', '0', '0', '0'},
-                        {'0', '0', '0', '0', '0'}};
-        int[] start = new int[]{0, 3};
-        int[] destination = new int[]{3, 4};
-        int res = test.minimumMoves(grid, start, destination);
+        LeetCode200 test = new LeetCode200();
+        char[][] grid = {{'1', '1', '1', '1', '0'},
+                {'1', '1', '0', '1', '0'},
+                {'1', '1', '0', '0', '0'},
+                {'0', '0', '0', '0', '0'}};
+        int res = test.numIslandsBFS(grid);
         System.out.println(res);
+
+
+//        POJ_3984 test = new POJ_3984();
+//        char[][] grid = {{'1', '1', '0', '0', '1'},
+//                        {'1', '1', '0', '1', '0'},
+//                        {'1', '1', '0', '0', '0'},
+//                        {'0', '0', '0', '0', '0'}};
+//        int[] start = new int[]{0, 3};
+//        int[] destination = new int[]{3, 4};
+//        int res = test.minimumMoves(grid, start, destination);
+//        System.out.println(res);
     }
 }
 
