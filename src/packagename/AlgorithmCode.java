@@ -1,19 +1,16 @@
 package packagename;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-public class HelloWorld {
+public class AlgorithmCode {
     public static void main(String[] args) {
-        LeetCode200 test = new LeetCode200();
-        char[][] grid = {{'1', '1', '1', '1', '0'},
-                {'1', '1', '0', '1', '0'},
-                {'1', '1', '0', '0', '0'},
-                {'0', '0', '0', '0', '0'}};
-        int res = test.numIslandsBFS(grid);
-        System.out.println(res);
+//        LeetCode200 test = new LeetCode200();
+//        char[][] grid = {{'1', '1', '1', '1', '0'},
+//                {'1', '1', '0', '1', '0'},
+//                {'1', '1', '0', '0', '0'},
+//                {'0', '0', '0', '0', '0'}};
+//        int res = test.numIslandsBFS(grid);
+//        System.out.println(res);
 
 //        POJ_3984 test = new POJ_3984();
 //        char[][] grid = {{'1', '1', '0', '0', '1'},
@@ -24,6 +21,12 @@ public class HelloWorld {
 //        int[] destination = new int[]{3, 4};
 //        int res = test.minimumMoves(grid, start, destination);
 //        System.out.println(res);
+
+        LeetCode40 test = new LeetCode40();
+        int[] nums = new int[]{10, 1, 2, 7, 6, 1, 5};
+        int target = 8;
+        List<List<Integer>> res = test.combinationSum2(nums, target);
+        System.out.println(res);
     }
 }
 
@@ -141,7 +144,6 @@ class LeetCode200 {
     岛屿数量
     由 '1'（陆地）和 '0'（水）组成的的二维网格，计算网格中岛屿的数量。
      */
-
     public int[][] directions = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
     // 法1：dfs
     public void dfs(char[][] grid, int x, int y){
@@ -242,6 +244,7 @@ class POJ_3984 {
         return dist[destination[0]][destination[1]];
     }
 }
+
 class LeetCode31 {
     /*
     next permutation
@@ -279,9 +282,11 @@ class LeetCode31 {
         nums[j] = temp;
     }
 }
+
 class LeetCode46 {
     /*
-    全排列
+    全排列1
+    给定一个 没有重复 数字的序列，返回其所有可能的全排列。
      */
     public List<List<Integer>> permute(int[] nums) {
         int length = nums.length;
@@ -290,30 +295,137 @@ class LeetCode46 {
             return res;
         }
         boolean[] used = new boolean[length];
-        LinkedList<Integer> queue = new LinkedList<>();
+        Deque<Integer> path = new ArrayDeque<>();
 
-        dfs(nums, length, 0, queue, used, res);
+        dfs(nums, length, 0, path, used, res);
         return res;
     }
-    private void dfs(int[] nums, int length, int depth, LinkedList<Integer> queue, boolean[] used, List<List<Integer>> res) {
+    private void dfs(int[] nums, int length, int depth, Deque<Integer> path, boolean[] used, List<List<Integer>> res) {
         if (depth == length) {
-            res.add(new ArrayList<>(queue));
+            res.add(new ArrayList<>(path));
             return;
         }
 
         for (int i = 0; i < length; i++) {
             if (!used[i]) {
-                queue.addLast(nums[i]);
+                path.addLast(nums[i]);
                 used[i] = true;
-                dfs(nums, length, depth+1, queue, used, res);
+                dfs(nums, length, depth+1, path, used, res);
                 used[i] = false;
-                queue.removeLast();
+                path.removeLast();
             }
         }
     }
 }
 
+class LeetCode47 {
+    /*
+    全排列2
+    给定一个可包含重复数字的序列，返回所有不重复的全排列。
+     */
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        int length = nums.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if (length == 0) {
+            return res;
+        }
 
+        boolean[] used = new boolean[length];
+        Deque<Integer> path = new ArrayDeque<>(length);
+
+        Arrays.sort(nums);
+        dfs(nums, 0, length, used, path, res);
+        return res;
+    }
+    private void dfs(int[] nums, int depth, int length, boolean[] used, Deque<Integer> path, List<List<Integer>> res) {
+        if (depth == length) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = 0; i < length; i++) {
+            if (!used[i]){
+                if (i > 0 && nums[i] == nums[i-1] && used[i-1] == false) {
+                    continue;
+                }
+                path.addLast(nums[i]);
+                used[i] = true;
+                dfs(nums, depth+1, length, used, path, res);
+                used[i] = false;
+                path.removeLast();
+            }
+        }
+        return;
+    }
+}
+
+class LeetCode39 {
+    /*
+    组合总和
+    给定一个无重复元素的数组candidates和一个目标数target，找出candidates中所有可以使数字和为target的组合。
+    candidates中的数字可以无限制重复被选取。
+     */
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        int length = candidates.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if (length == 0) {
+            return res;
+        }
+        Arrays.sort(candidates);
+        Deque<Integer> path = new ArrayDeque<>();
+        dfs(candidates, 0, length, path, target, res);
+        return res;
+    }
+
+    private void dfs(int[] candidates, int start, int length, Deque<Integer> path, int target, List<List<Integer>> res) {
+        if (target == 0) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = start; i < length; i++) {
+            if (target - candidates[i] < 0) {
+                break;
+            }
+            path.addLast(candidates[i]);
+            dfs(candidates, i, length, path, target-candidates[i], res);
+            path.removeLast();
+        }
+    }
+}
+
+class LeetCode40 {
+    /*
+    给定一个数组candidates和一个目标数target，找出candidates中所有可以使数字和为target的组合。
+    candidates中的每个数字在每个组合中只能使用一次。
+     */
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        int length = candidates.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if (length == 0) {
+            return res;
+        }
+        Arrays.sort(candidates);
+        Deque<Integer> path = new ArrayDeque<>();
+        dfs(candidates, 0, length, path, target, res);
+        return res;
+    }
+    private void dfs(int[] candidates, int start, int length, Deque<Integer> path, int target, List<List<Integer>> res) {
+        if (target == 0) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = start; i < length; i++) {
+            if (target - candidates[i] < 0) {
+                break;
+            }
+            if (i > start+1 && candidates[i] == candidates[i-1]) {
+                continue;
+            }
+            path.addLast(candidates[i]);
+            dfs(candidates, start+1, length, path, target-candidates[i], res);
+            path.removeLast();
+        }
+    }
+}
 
 
 
