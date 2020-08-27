@@ -243,6 +243,9 @@ class POJ_3984 {
     }
 }
 class LeetCode31 {
+    /*
+    next permutation
+     */
     public void nextPermutation(int[] nums) {
         if (nums == null || nums.length == 0) {
             return;
@@ -274,6 +277,39 @@ class LeetCode31 {
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
+    }
+}
+class LeetCode46 {
+    /*
+    全排列
+     */
+    public List<List<Integer>> permute(int[] nums) {
+        int length = nums.length;
+        List<List<Integer>> res = new ArrayList<>();
+        if (length == 0) {
+            return res;
+        }
+        boolean[] used = new boolean[length];
+        LinkedList<Integer> queue = new LinkedList<>();
+
+        dfs(nums, length, 0, queue, used, res);
+        return res;
+    }
+    private void dfs(int[] nums, int length, int depth, LinkedList<Integer> queue, boolean[] used, List<List<Integer>> res) {
+        if (depth == length) {
+            res.add(new ArrayList<>(queue));
+            return;
+        }
+
+        for (int i = 0; i < length; i++) {
+            if (!used[i]) {
+                queue.addLast(nums[i]);
+                used[i] = true;
+                dfs(nums, length, depth+1, queue, used, res);
+                used[i] = false;
+                queue.removeLast();
+            }
+        }
     }
 }
 
