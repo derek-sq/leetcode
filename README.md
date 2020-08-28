@@ -1,6 +1,8 @@
 # leetcode
 * by 没有感情的刷题机器
 ### 主要根据《挑战程序设计竞赛》的章节，结合leetcode加强练习
+- src/packagegame下为题目的源代码
+- Java_foundation下为Java的基础知识（复习整理中）
 #### 进度
 ##### charpter1 准备篇
 1. 组成三角形的最大周长
