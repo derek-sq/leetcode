@@ -394,6 +394,7 @@ class LeetCode39 {
 
 class LeetCode40 {
     /*
+    组合总和2
     给定一个数组candidates和一个目标数target，找出candidates中所有可以使数字和为target的组合。
     candidates中的每个数字在每个组合中只能使用一次。
      */
@@ -417,11 +418,11 @@ class LeetCode40 {
             if (target - candidates[i] < 0) {
                 break;
             }
-            if (i > start+1 && candidates[i] == candidates[i-1]) {
+            if (i > start && candidates[i] == candidates[i-1]) {
                 continue;
             }
             path.addLast(candidates[i]);
-            dfs(candidates, start+1, length, path, target-candidates[i], res);
+            dfs(candidates, i+1, length, path, target-candidates[i], res);
             path.removeLast();
         }
     }
