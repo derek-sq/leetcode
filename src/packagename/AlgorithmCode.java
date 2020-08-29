@@ -22,11 +22,16 @@ public class AlgorithmCode {
 //        int res = test.minimumMoves(grid, start, destination);
 //        System.out.println(res);
 
-        LeetCode40 test = new LeetCode40();
-        int[] nums = new int[]{10, 1, 2, 7, 6, 1, 5};
-        int target = 8;
-        List<List<Integer>> res = test.combinationSum2(nums, target);
+//        LeetCode40 test = new LeetCode40();
+//        int[] nums = new int[]{10, 1, 2, 7, 6, 1, 5};
+//        int target = 8;
+//        List<List<Integer>> res = test.combinationSum2(nums, target);
+//        System.out.println(res);
+
+        LeetCode60 test = new LeetCode60();
+        String res = test.getPermutation(4,9);
         System.out.println(res);
+
     }
 }
 
@@ -245,44 +250,6 @@ class POJ_3984 {
     }
 }
 
-class LeetCode31 {
-    /*
-    next permutation
-     */
-    public void nextPermutation(int[] nums) {
-        if (nums == null || nums.length == 0) {
-            return;
-        }
-        int i = nums.length - 2;
-        while (i >= 0 && nums[i + 1] <= nums[i]) {
-            i--;
-        }
-        if (i >= 0) {
-            int j = nums.length - 1;
-            while (j >= 0 && nums[j] <= nums[i]) {
-                j--;
-            }
-            swap(nums, i, j);
-        }
-        reverse(nums, i + 1);
-    }
-
-    private void reverse(int[] nums, int start) {
-        int i = start, j = nums.length - 1;
-        while (i < j) {
-            swap(nums, i, j);
-            i++;
-            j--;
-        }
-    }
-
-    private void swap(int[] nums, int i, int j) {
-        int temp = nums[i];
-        nums[i] = nums[j];
-        nums[j] = temp;
-    }
-}
-
 class LeetCode46 {
     /*
     全排列1
@@ -358,6 +325,88 @@ class LeetCode47 {
     }
 }
 
+class LeetCode31 {
+    /*
+    next permutation
+     */
+    public void nextPermutation(int[] nums) {
+        if (nums == null || nums.length == 0) {
+            return;
+        }
+        // [4,5,2,3,1] --> 4 5 3 2 1 --> 4 5 3 1 2
+        int i = nums.length - 2;
+        while (i >= 0 && nums[i] > nums[i + 1]) {
+            i--;
+        }
+        if (i >= 0) {
+            int j = nums.length - 1;
+            while (j >= 0 && nums[j] <= nums[i]) {
+                j--;
+            }
+            swap(nums, i, j);
+        }
+        reverse(nums, i + 1);
+    }
+
+    private void reverse(int[] nums, int start) {
+        int i = start, j = nums.length - 1;
+        while (i < j) {
+            swap(nums, i, j);
+            i++;
+            j--;
+        }
+    }
+
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+
+class LeetCode60 {
+    /*
+    给定 n 和 k，按大小顺序列出所有排列情况, 返回第 k 个排列。
+     */
+    public String getPermutation(int n, int k) {
+        StringBuffer res = new StringBuffer();
+        if (n <= 0 || k <= 0) {
+            return res.toString();
+        }
+        Deque<String> path = new ArrayDeque<>();
+        boolean[] used = new boolean[n];
+        dfs(0, n, k, path, used, res);
+        return res.toString();
+    }
+    private void dfs(int start, int n, int k, Deque<String> path, boolean[] used, StringBuffer res) {
+        if (path.size() == n) {
+            for (String v : path) res.append(v);
+            return;
+        }
+        int cur = factorial(n - start - 1); //要放在垂直层循环外面，表示该水平层的排列数目
+        for (int i = 0; i < n; i++) {
+            if (!used[i]) {
+                if (cur < k) {
+                    k -= cur;
+                    continue; //后续不需要撤回操作，因为没有执行前面的操作，均跳过了
+                }
+                path.addLast(i+1 + "");
+                used[i] = true;
+                dfs(start+1, n, k, path, used, res);
+            }
+        }
+    }
+    private int factorial(int n) {
+        int res = 1;
+        if (n == 0 || n == 1) return res;
+        while (n > 0) {
+            res *= n;
+            n -= 1;
+        }
+        return res;
+    }
+}
+
 class LeetCode39 {
     /*
     组合总和
@@ -415,9 +464,11 @@ class LeetCode40 {
             return;
         }
         for (int i = start; i < length; i++) {
+            // 不满足条件的直接剪支
             if (target - candidates[i] < 0) {
                 break;
             }
+            // 同层的遇到相同的选择，剪支
             if (i > start && candidates[i] == candidates[i-1]) {
                 continue;
             }
@@ -427,6 +478,93 @@ class LeetCode40 {
         }
     }
 }
+
+class LeetCode77 {
+    /*
+    组合：给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
+     */
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (n <= 0 || k <= 0 || k > n) {
+            return res;
+        }
+        Deque<Integer> path = new ArrayDeque<>();
+        dfs(1, n, k, path, res);
+        return res;
+    }
+    private void dfs(int start, int n, int k, Deque<Integer> path, List<List<Integer>> res) {
+        if (path.size() == k) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+        for (int i = start; i <= n; i++) {
+            //剩余数字不够了，直接剪支
+            if (i + k - path.size() - 1 > n) {
+                break;
+            }
+            path.addLast(i);
+            dfs(i+1, n, k, path, res);
+            path.removeLast();
+        }
+    }
+}
+
+class LeetCode78 {
+    /*
+    子集：给定一组不含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）
+     */
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        Deque<Integer> path = new ArrayDeque<>();
+        dfs(nums, 0, path, res);
+        return res;
+    }
+    private void  dfs(int[] nums, int start, Deque<Integer> path, List<List<Integer>> res) {
+        res.add(new ArrayList<>(path));
+        if (start == nums.length) {
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            path.addLast(nums[i]);
+            dfs(nums, i+1, path, res);
+            path.removeLast();
+        }
+    }
+}
+
+class LeetCode90 {
+    /*
+    子集2：给定一个可能包含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。
+     */
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (nums == null || nums.length == 0) {
+            return res;
+        }
+        Deque<Integer> path = new ArrayDeque<>();
+        Arrays.sort(nums);
+        dfs(nums, 0, path, res);
+        return res;
+    }
+    private void  dfs(int[] nums, int start, Deque<Integer> path, List<List<Integer>> res) {
+        res.add(new ArrayList<>(path));
+        if (start == nums.length) {
+            return;
+        }
+        for (int i = start; i < nums.length; i++) {
+            if (i > start && nums[i] == nums[i-1]) {
+                continue;
+            }
+            path.addLast(nums[i]);
+            dfs(nums, i+1, path, res);
+            path.removeLast();
+        }
+    }
+}
+
 
 
 
