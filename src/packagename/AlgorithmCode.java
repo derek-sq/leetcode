@@ -1,5 +1,7 @@
 package packagename;
 
+import com.sun.org.apache.xpath.internal.objects.XString;
+
 import java.util.*;
 
 public class AlgorithmCode {
@@ -28,8 +30,8 @@ public class AlgorithmCode {
 //        List<List<Integer>> res = test.combinationSum2(nums, target);
 //        System.out.println(res);
 
-        LeetCode60 test = new LeetCode60();
-        String res = test.getPermutation(4,9);
+        LeetCode22 test = new LeetCode22();
+        List<String> res = test.generateParenthesis(3);
         System.out.println(res);
 
     }
@@ -565,7 +567,170 @@ class LeetCode90 {
     }
 }
 
+class LeetCode93 {
+    /*
+    复原IP地址
+     */
+    public List<String> restoreIpAddresses(String s) {
+        List<String> res = new ArrayList<>();
+        int length = s.length();
+        if (s == null || length < 4 || length > 12) {
+            return res;
+        }
+        List<String> path = new ArrayList<>();
+        int splitUsed = 0;
+        dfs(s, 0, length, splitUsed, path, res);
+        return res;
+    }
+    private void dfs(String s, int start, int length, int splitUsed, List<String> path, List<String> res) {
+        if (splitUsed == 4) {
+            if (start == length) {
+                String temp = "";
+                for (String k :path) {
+                    temp = temp + k + '.';
+                }
+                temp = temp.substring(0, temp.length()-1);
+                res.add(temp);
+            }else {
+                return;
+            }
+        }
+        for (int i = 1; i <= 3; i++) {
+            if (start + i > length) return;
+            if ( i > 1 && s.charAt(start) == '0') return;
 
+            String tempStr = s.substring(start, start + i);
+            if (Integer.parseInt(tempStr) > 255) return;
 
+            path.add(tempStr);
+            splitUsed += 1;
+            dfs(s, start + i, length, splitUsed, path, res);
+            path.remove(path.size()-1);
+            splitUsed -= 1;
+        }
+    }
+}
 
+class LeetCode17 {
+    /*
+    电话号码2-9的字母组合
+     */
+    public List<String> letterCombinations(String digits) {
+        List<String> res = new ArrayList<>();
+        int length = digits.length();
+        if (length == 0) {
+            return res;
+        }
+        Map<Character, String> map = new HashMap<>();
+        map.put('2', "abc");
+        map.put('3', "def");
+        map.put('4', "ghi");
+        map.put('5', "jkl");
+        map.put('6', "mno");
+        map.put('7', "pqrs");
+        map.put('8', "tuv");
+        map.put('9', "wxyz");
 
+        StringBuffer path = new StringBuffer();
+        dfs(0, digits, length, path, map, res);
+        return res;
+    }
+    // 23
+    private void dfs(int start, String digits, int length, StringBuffer path, Map<Character, String> map, List<String> res) {
+        if (path.length() == length) {
+            res.add(path.toString());
+            return;
+        }
+        String tempStr = map.get(digits.charAt(start));
+        for (int i = 0; i < tempStr.length(); i++) {
+            Character c = tempStr.charAt(i);
+            path.append(c);
+            dfs(start+1, digits, length, path, map, res);
+            path.deleteCharAt(path.length()-1);
+        }
+    }
+}
+
+class LeetCode784 {
+    /*
+    字母大小写全排列
+     */
+    public List<String> letterCasePermutation(String S) {
+        List<String> res = new ArrayList<>();
+        int length = S.length();
+        if (length == 0) {
+            return res;
+        }
+        Deque<Character> path = new ArrayDeque<>();
+        dfs(0, length, S, path, res);
+        return res;
+    }
+    private void dfs(int start, int length, String S, Deque<Character> path, List<String> res) {
+        if (start == length) {
+            String s = new String();
+            for (Character v: path) {
+                s += v;
+            }
+            res.add(s);
+            return;
+        }
+        StringBuffer tempCh = new StringBuffer();
+        char cur = S.charAt(start);
+        if (cur >= 'A' && cur <= 'Z') {
+            tempCh.append(cur);
+            tempCh.append((char) (cur+'a'-'A'));
+        }else if (cur >= 'a' && cur <= 'z') {
+            tempCh.append(cur);
+            tempCh.append((char) (cur-'a'+'A'));
+        }else {
+            tempCh.append(cur);
+        }
+        for (int i = 0; i < tempCh.length(); i++) {
+            path.addLast(tempCh.charAt(i));
+            dfs(start+1, length, S, path, res);
+            path.removeLast();
+        }
+    }
+}
+
+class LeetCode22 {
+    /*
+    有效括号生成
+     */
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        if (n == 0) {
+            return res;
+        }
+        int left = n, right = n;
+        StringBuffer path = new StringBuffer();
+        dfs(left, right, path, res);
+        return res;
+    }
+    private void dfs(int left, int right, StringBuffer path, List<String> res) {
+        if (left == 0 && right == 0) {
+            res.add(path.toString());
+            return;
+        }
+        if (left < 0) {
+            return;
+        }else if(right < 0) {
+            return;
+        }
+        if (left > right) {
+            return;
+        }
+        path.append('(');
+        left -= 1;
+        dfs(left, right, path, res);
+        path.deleteCharAt(path.length()-1);
+        left += 1;
+
+        path.append(')');
+        right -= 1;
+        dfs(left, right, path, res);
+        path.deleteCharAt(path.length()-1);
+        right += 1;
+    }
+
+}
