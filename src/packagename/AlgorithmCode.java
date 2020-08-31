@@ -6,13 +6,21 @@ import java.util.*;
 
 public class AlgorithmCode {
     public static void main(String[] args) {
-//        LeetCode200 test = new LeetCode200();
-//        char[][] grid = {{'1', '1', '1', '1', '0'},
-//                {'1', '1', '0', '1', '0'},
-//                {'1', '1', '0', '0', '0'},
-//                {'0', '0', '0', '0', '0'}};
-//        int res = test.numIslandsBFS(grid);
-//        System.out.println(res);
+        LeetCode130 test = new LeetCode130();
+        char[][] grid = {
+                            {'X','X','X','X'},
+                            {'X','0','0','X'},
+                            {'X','X','0','X'},
+                            {'X','0','X','X'}
+                        };
+        test.solve(grid);
+
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                System.out.print(grid[i][j]);
+            }
+            System.out.println();
+        }
 
 //        POJ_3984 test = new POJ_3984();
 //        char[][] grid = {{'1', '1', '0', '0', '1'},
@@ -30,14 +38,7 @@ public class AlgorithmCode {
 //        List<List<Integer>> res = test.combinationSum2(nums, target);
 //        System.out.println(res);
 
-        int[][] image = new int[][]{{0,0,0}, {0,1,1}};
-        LeetCode733 test = new LeetCode733();
-        int[][] res = test.floodFill(image, 1,1,1);
-        for (int i = 0; i < res.length; i++) {
-            for (int j = 0; j < res[0].length; j++) {
-                System.out.print(image[i][j]);
-            }
-        }
+
     }
 }
 
@@ -764,3 +765,47 @@ class LeetCode733 {
     }
 
 }
+
+class LeetCode130 {
+    /*
+    被围绕的区域：给定一个二维的矩阵，包含 'X' 和 'O'（字母 O）。找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
+     */
+    public void solve(char[][] board) {
+        int rows = board.length;
+        if (rows == 0 || board == null) {
+            return;
+        }
+        int cols = board[0].length;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (i == 0 || i == board.length-1 || j == 0 || j == board[0].length-1) {
+                    dfs(board, i, j);
+                }
+            }
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == '0') {
+                    board[i][j] = 'X';
+                }
+                if (board[i][j] == 'Z') {
+                    board[i][j] = '0';
+                }
+            }
+        }
+    }
+    private void dfs(char[][] board, int i, int j) {
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length) {
+            return;
+        }
+        if (board[i][j] == '0') {
+            board[i][j] = 'Z';
+            dfs(board, i, j+1);
+            dfs(board, i, j-1);
+            dfs(board, i+1, j);
+            dfs(board, i-1, j);
+        }
+        return;
+    }
+}
+
