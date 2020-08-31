@@ -30,10 +30,14 @@ public class AlgorithmCode {
 //        List<List<Integer>> res = test.combinationSum2(nums, target);
 //        System.out.println(res);
 
-        LeetCode22 test = new LeetCode22();
-        List<String> res = test.generateParenthesis(3);
-        System.out.println(res);
-
+        int[][] image = new int[][]{{0,0,0}, {0,1,1}};
+        LeetCode733 test = new LeetCode733();
+        int[][] res = test.floodFill(image, 1,1,1);
+        for (int i = 0; i < res.length; i++) {
+            for (int j = 0; j < res[0].length; j++) {
+                System.out.print(image[i][j]);
+            }
+        }
     }
 }
 
@@ -731,6 +735,32 @@ class LeetCode22 {
         dfs(left, right, path, res);
         path.deleteCharAt(path.length()-1);
         right += 1;
+    }
+
+}
+
+class LeetCode733 {
+    public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+        int rows = image.length;
+        int cols = image[0].length;
+        int srcColor = image[sr][sc];
+        boolean[][] visited = new boolean[rows][cols];
+        dfs(image, sr, sc, newColor, srcColor, visited);
+        return image;
+
+    }
+    private void dfs(int[][] image, int x, int y, int newColor, int srcColor, boolean[][] visited) {
+        if (x < 0 || x >= image.length || y < 0 || y >= image[0].length) {
+            return;
+        }
+        if (image[x][y] == srcColor && visited[x][y] == false) {
+            image[x][y] = newColor;
+            visited[x][y] = true;
+            dfs(image, x+1, y, newColor, srcColor, visited);
+            dfs(image, x-1, y, newColor, srcColor, visited);
+            dfs(image, x, y+1, newColor, srcColor, visited);
+            dfs(image, x, y-1, newColor, srcColor, visited);
+        }
     }
 
 }
