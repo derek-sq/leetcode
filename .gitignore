@@ -28,3 +28,4 @@ hs_err_pid*
 out/
 JavaLeetCode.iml
 *.DS_Store
+src/leetcode/editor/cn/*.json

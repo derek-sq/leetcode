@@ -6,21 +6,15 @@ import java.util.*;
 
 public class AlgorithmCode {
     public static void main(String[] args) {
-        LeetCode130 test = new LeetCode130();
-        char[][] grid = {
-                            {'X','X','X','X'},
-                            {'X','0','0','X'},
-                            {'X','X','0','X'},
-                            {'X','0','X','X'}
-                        };
-        test.solve(grid);
+        LeetCode79 test = new LeetCode79();
 
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                System.out.print(grid[i][j]);
-            }
-            System.out.println();
-        }
+        char[][] grid = {{'C', 'A', 'A'},
+                         {'A', 'A', 'A'},
+                         {'B', 'C', 'D'}};
+        String word = "AAB";
+        System.out.println(test.exist(grid, word));
+
+
 
 //        POJ_3984 test = new POJ_3984();
 //        char[][] grid = {{'1', '1', '0', '0', '1'},
@@ -809,3 +803,60 @@ class LeetCode130 {
     }
 }
 
+class LeetCode79 {
+    /*
+    单词搜索
+     */
+    public boolean exist(char[][] board, String word) {
+        if (word == "" || board == null) {
+            return false;
+        }
+        int rows = board.length;
+        if (rows == 0) {
+            if (word == "") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        int cols = board[0].length;
+        boolean[][] visited = new boolean[rows][cols];
+
+        boolean flag = false;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (board[i][j] == word.charAt(0)) {
+                    flag = dfs(0, i, j, word, board, visited);
+                    if (flag) {
+                        return flag;
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+    private boolean dfs(int start, int i, int j, String word, char[][] board, boolean[][] visited) {
+        if (start == word.length()) {
+            return true;
+        }
+        if (i < 0 || i >= board.length || j < 0 || j >= board[0].length) {
+            return false;
+        }
+        if (board[i][j] == word.charAt(start) && !visited[i][j]) {
+            visited[i][j] = true;
+            boolean temp_flag = dfs(start+1, i+1, j, word, board, visited) ||
+                    dfs(start+1, i-1, j, word, board, visited) ||
+                    dfs(start+1, i, j+1, word, board, visited) ||
+                    dfs(start+1, i, j-1, word, board, visited);
+            if (temp_flag) {
+                return temp_flag;
+            } else {
+                visited[i][j] = false;
+                return temp_flag;
+            }
+
+        }
+        return false;
+    }
+}
