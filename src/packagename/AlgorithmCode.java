@@ -735,6 +735,9 @@ class LeetCode22 {
 }
 
 class LeetCode733 {
+    /*
+    给你一个坐标 (sr, sc) 表示图像渲染开始的像素值（行 ，列）和一个新的颜色值 newColor，让你重新上色这幅图像。
+     */
     public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
         int rows = image.length;
         int cols = image[0].length;
